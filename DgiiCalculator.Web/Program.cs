@@ -5,7 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<ICalculatorService, CalculatorService>();
 
-// Add services to the container.
+// Add services to the container..
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
