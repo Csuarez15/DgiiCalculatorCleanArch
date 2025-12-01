@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="DgiiCalculator.Application/DgiiCalculator.Application.csproj" />
+  <Project Path="DgiiCalculator.Domain/DgiiCalculator.Domain.csproj" />
+  <Project Path="DgiiCalculator.Infrastructure/DgiiCalculator.Infrastructure.csproj" />
+  <Project Path="DgiiCalculator.Web/DgiiCalculator.Web.csproj" />
+</Solution>

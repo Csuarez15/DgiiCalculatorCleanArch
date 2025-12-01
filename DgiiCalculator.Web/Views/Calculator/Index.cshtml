@@ -1,0 +1,178 @@
+﻿@model DgiiCalculator.Web.Models.CalculatorViewModel
+
+@{
+    ViewData["Title"] = "Calculadora ISR";
+}
+
+<link rel="stylesheet" href="~/css/dgii-custom.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<div class="top-bar">
+    <div class="social-icons">
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-youtube"></i></a>
+    </div>
+    <div class="top-links">
+        <a href="#" class="btn-pill">COMUNIDAD AYUDA</a>
+        <a href="#" class="btn-pill">DENUNCIAS</a>
+        <a href="#" class="btn-pill filled">DEUDAS FIRMES</a>
+        <a href="#" class="btn-pill filled">OFICINA VIRTUAL</a>
+    </div>
+</div>
+
+<header>
+    <div class="logo-container">
+        <img src="~/images/dgii_logo.png" alt="Impuestos Internos">
+    </div>
+    <ul class="nav-menu">
+        <li><a href="#">HERRAMIENTAS <i class="fas fa-caret-down"></i></a></li>
+        <li><a href="#">SERVICIOS <i class="fas fa-caret-down"></i></a></li>
+        <li><a href="#">PUBLICACIONES <i class="fas fa-caret-down"></i></a></li>
+        <li><a href="#">TRANSPARENCIA</a></li>
+    </ul>
+    <div class="search-container">
+        <input type="text" placeholder="Búsqueda...">
+        <button class="search-btn"><i class="fas fa-arrow-right"></i></button>
+    </div>
+</header>
+
+<div class="breadcrumbs">
+    Impuestos Internos <span>›</span> Herramientas <span>›</span> Consultas <span>›</span> Calculadora ISR
+</div>
+
+<div class="container-grid">
+    <main>
+        <h1 class="page-title">Calculadora ISR (Solo Impuesto)</h1>
+
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div style="background-color: #fff8f8; border: 1px solid #dc3545; color: #dc3545; padding: 15px; border-radius: 4px; margin-bottom: 20px;">
+                <i class="fas fa-exclamation-circle"></i> <strong>Atención:</strong> Por favor revise los datos ingresados.
+            </div>
+        }
+
+        <div class="accordion-wrapper">
+            <div class="acc-item" id="acc-desc">
+                <div class="acc-header" onclick="toggleAccordion('acc-desc')">
+                    <span>Descripción</span>
+                    <i class="fas fa-caret-down acc-icon"></i>
+                </div>
+                <div class="acc-content">
+                    Esta herramienta permite determinar el Impuesto Sobre la Renta (ISR) a retener sobre un monto imponible. Usted puede seleccionar si el ingreso ingresado es mensual o anual para obtener la proyección correspondiente según la escala progresiva vigente.
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-wrapper">
+            <div class="acc-item" id="acc-info">
+                <div class="acc-header" onclick="toggleAccordion('acc-info')">
+                    <span>Información Adicional</span>
+                    <i class="fas fa-caret-down acc-icon"></i>
+                </div>
+                <div class="acc-content">
+                    <p><strong>Instrucciones:</strong></p>
+                    <ul>
+                        <li>Seleccione la <strong>Frecuencia del Ingreso</strong>.</li>
+                        <li>Introduzca el <strong>Ingreso Imponible</strong>.</li>
+                        <li>Haga clic en <strong>CALCULAR</strong>.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <form asp-controller="Calculator" asp-action="Index" method="post" class="dgii-form-section">
+
+            <div class="dgii-row">
+                <div class="dgii-col">
+                    <label>Seleccionar Tipo de Ingreso</label>
+                    <select asp-for="Input.Frequency" class="dgii-input" onchange="focusAmount()">
+                        <option value="M">Mensual</option>
+                        <option value="A">Anual</option>
+                    </select>
+                </div>
+
+                <div class="dgii-col">
+                    <label>Ingreso Imponible (RD$)</label>
+                    <input asp-for="Input.IncomeAmount"
+                           class="dgii-input"
+                           placeholder="Ej: 60000.00"
+                           type="number"
+                           step="0.01"
+                           autofocus
+                           oninput="validateMoneyInput(this)"
+                           onkeydown="checkEnter(event)"
+                           onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46" />
+                    <span asp-validation-for="Input.IncomeAmount" class="text-danger"></span>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-dgii-action">CALCULAR</button>
+            <div style="clear:both"></div>
+        </form>
+
+        @if (Model.ShowResults && Model.Result != null)
+        {
+            <div class="result-box" id="resultado">
+                <h3 class="result-title">Resultados del Cálculo</h3>
+
+                <table class="result-table">
+                    <thead>
+                        <tr>
+                            <th width="40%">Concepto</th>
+                            <th class="text-right" width="30%">Mensual</th>
+                            <th class="text-right" width="30%">Anual (Est.)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Ingreso Imponible</td>
+                            <td class="text-right">@Model.Result.MonthlyIncome.ToString("C2")</td>
+                            <td class="text-right">@Model.Result.AnnualIncome.ToString("C2")</td>
+                        </tr>
+                        <tr class="row-rate">
+                            <td>Tasa Marginal</td>
+                            <td colspan="2">@Model.Result.AppliedRate</td>
+                        </tr>
+                        <tr class="row-total">
+                            <td>ISR a Retener</td>
+                            <td class="text-right">@Model.Result.MonthlyTax.ToString("C2")</td>
+                            <td class="text-right">@Model.Result.AnnualTax.ToString("C2")</td>
+                        </tr>
+                        <tr class="row-neto">
+                            <td>Sueldo Neto</td>
+                            <td class="text-right">@Model.Result.MonthlyNet.ToString("C2")</td>
+                            <td class="text-right">@Model.Result.AnnualNet.ToString("C2")</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <script>
+                window.onload = function() {
+                    document.getElementById('resultado').scrollIntoView({ behavior: 'smooth' });
+                };
+            </script>
+        }
+    </main>
+
+    <aside class="sidebar">
+        <ul>
+            <li><a href="#">RNC Contribuyentes</a></li>
+            <li><a href="#">RNC Registrados</a></li>
+            <li><a href="#" class="current">Calculadora ISR</a></li>
+            <li><a href="#">NCF / e-NCF</a></li>
+            <li><a href="#">Cuotas IPI</a></li>
+            <li><a href="#">Valor de inmueble (IPI)</a></li>
+            <li><a href="#">Firmas Electrónicas</a></li>
+        </ul>
+    </aside>
+</div>
+
+@section Scripts {
+    <script src="~/js/dgii-calculator.js"></script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
