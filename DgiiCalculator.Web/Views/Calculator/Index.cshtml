@@ -153,30 +153,35 @@
                 <table class="result-table">
                     <thead>
                         <tr>
-                            <th width="40%">Concepto</th>
-                            <th class="text-right" width="30%">Mensual</th>
-                            <th class="text-right" width="30%">Anual (Est.)</th>
+                            <th style="width: 40%;" class="text-align-left">Concepto</th>
+
+                            <th style="width: 30%;" class="text-align-right">Mensual</th>
+                            <th style="width: 30%;" class="text-align-right">Anual (Est.)</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>Ingreso Imponible</td>
-                            <td class="text-right">@Model.Result.MonthlyIncome.ToString("C2")</td>
-                            <td class="text-right">@Model.Result.AnnualIncome.ToString("C2")</td>
+                            <td class="text-align-left">Ingreso Imponible</td>
+                            <td class="text-align-right">@Model.Result.MonthlyIncome.ToString("C2")</td>
+                            <td class="text-align-right">@Model.Result.AnnualIncome.ToString("C2")</td>
                         </tr>
+
                         <tr class="row-rate">
-                            <td>Tasa Marginal</td>
-                            <td colspan="2">@Model.Result.AppliedRate</td>
+                            <td class="text-align-left">Tasa Marginal</td>
+
+                            <td colspan="2" class="text-align-center">@Model.Result.AppliedRate</td>
                         </tr>
+
                         <tr class="row-total">
-                            <td>ISR a Retener</td>
-                            <td class="text-right">@Model.Result.MonthlyTax.ToString("C2")</td>
-                            <td class="text-right">@Model.Result.AnnualTax.ToString("C2")</td>
+                            <td class="text-align-left">ISR a Retener</td>
+                            <td class="text-align-right">@Model.Result.MonthlyTax.ToString("C2")</td>
+                            <td class="text-align-right">@Model.Result.AnnualTax.ToString("C2")</td>
                         </tr>
+
                         <tr class="row-neto">
-                            <td>Sueldo Neto</td>
-                            <td class="text-right">@Model.Result.MonthlyNet.ToString("C2")</td>
-                            <td class="text-right">@Model.Result.AnnualNet.ToString("C2")</td>
+                            <td class="text-align-left">Sueldo Neto</td>
+                            <td class="text-align-right">@Model.Result.MonthlyNet.ToString("C2")</td>
+                            <td class="text-align-right">@Model.Result.AnnualNet.ToString("C2")</td>
                         </tr>
                     </tbody>
                 </table>

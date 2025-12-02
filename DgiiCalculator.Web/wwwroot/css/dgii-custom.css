@@ -1,6 +1,6 @@
 ﻿/* wwwroot/css/dgii-custom.css */
 
-/* --- 1. RESET Y ESTRUCTURA BASE --- */
+/* --- RESET Y ESTRUCTURA BASE --- */
 body {
     font-family: 'Open Sans', Arial, sans-serif;
     background-color: #fff;
@@ -17,7 +17,6 @@ body {
     --dgii-border: #e6e6e6;
 }
 
-/* Forzar que los enlaces no tengan subrayado por defecto */
 a {
     text-decoration: none;
     color: inherit;
@@ -212,13 +211,47 @@ h1.page-title {
     transform: rotate(180deg);
 }
 
+/* Estilos de Listas dentro de Acordeón */
+.info-block {
+    margin-bottom: 25px;
+}
 
-/* --- FORMULARIO (ESTILOS BLINDADOS) --- */
+.info-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 10px;
+    margin-top: 0;
+}
+
+.info-list {
+    list-style-type: disc;
+    padding-left: 25px;
+    margin: 0;
+}
+
+    .info-list li {
+        font-size: 14px;
+        color: #444;
+        margin-bottom: 8px;
+        line-height: 1.5;
+    }
+
+.info-note {
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+    margin-top: 10px;
+    font-size: 13px;
+    color: #666;
+    line-height: 1.5;
+}
+
+
+/* --- FORMULARIO --- */
 .dgii-form-section {
     margin-top: 40px;
 }
 
-/* Contenedor de las dos columnas */
 .dgii-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -242,7 +275,6 @@ h1.page-title {
         display: block;
     }
 
-/* Input y Select Customizado */
 .dgii-input {
     display: block;
     width: 100%;
@@ -263,7 +295,6 @@ h1.page-title {
         box-shadow: 0 0 0 2px rgba(57, 169, 53, 0.1);
     }
 
-/* Select con flecha */
 select.dgii-input {
     -webkit-appearance: none;
     appearance: none;
@@ -274,7 +305,6 @@ select.dgii-input {
     cursor: pointer;
 }
 
-/* Botón Calcular */
 .btn-dgii-action {
     background-color: var(--dgii-green);
     color: white;
@@ -298,7 +328,6 @@ select.dgii-input {
         background-color: var(--dgii-hover);
     }
 
-/* Validaciones */
 .text-danger {
     color: #dc3545;
     font-size: 11px;
@@ -309,14 +338,13 @@ select.dgii-input {
     white-space: nowrap;
 }
 
-/* Cuando el input tiene error, pintamos el borde rojo */
 .input-validation-error {
     border-color: #dc3545 !important;
     background-color: #fff !important;
 }
 
 
-/* --- TABLA DE RESULTADOS --- */
+/* --- TABLA DE RESULTADOS (GLOBAL - NO SOLO MÓVIL) --- */
 .result-box {
     margin-top: 80px;
     clear: both;
@@ -337,10 +365,11 @@ select.dgii-input {
 .result-table {
     width: 100%;
     border-collapse: collapse;
+    table-layout: fixed;
 }
 
     .result-table th {
-        text-align: left;
+        text-align: left; 
         padding: 12px 10px;
         color: #666;
         font-weight: 700;
@@ -353,17 +382,24 @@ select.dgii-input {
         color: #444;
     }
 
-.text-right {
-    text-align: right;
+/* CLASES DE ALINEACIÓN (Globales) */
+.text-align-left {
+    text-align: left !important;
 }
 
+.text-align-right {
+    text-align: right !important;
+}
+
+.text-align-center {
+    text-align: center !important;
+}
+
+/* Estilos de Filas Especiales */
 .row-rate td {
+    background: #e8f5e9;
     color: #333;
     font-weight: 600;
-    font-style: normal;
-    font-size: 14px;
-    text-align: center;
-    background: #e8f5e9;
     border-top: 1px solid #c8e6c9;
     border-bottom: 1px solid #c8e6c9;
 }
@@ -403,7 +439,7 @@ select.dgii-input {
             font-weight: bold;
         }
 
-/* Responsive */
+/* --- RESPONSIVE (SOLO CAMBIOS PARA MOVIL) --- */
 @media (max-width: 768px) {
     .container-grid {
         grid-template-columns: 1fr;
@@ -420,43 +456,5 @@ select.dgii-input {
 
     .nav-menu {
         display: none;
-    }
-    /* --- ESTILOS  PARA INFORMACIÓN ADICIONAL (LISTAS) --- */
-
-    .info-block {
-        margin-bottom: 25px; 
-    }
-
-    .info-title {
-        font-size: 14px;
-        font-weight: 700;
-        color: #333;
-        margin-bottom: 10px;
-        margin-top: 0;
-    }
-
-    .info-list {
-        list-style-type: disc; 
-        padding-left: 25px; 
-        margin: 0;
-    }
-
-        .info-list li {
-            font-size: 14px;
-            color: #444;
-            margin-bottom: 8px; 
-            line-height: 1.5;
-        }
-
-            .info-list li strong {
-            }
-
-    .info-note {
-        border-top: 1px solid #eee;
-        padding-top: 15px;
-        margin-top: 10px;
-        font-size: 13px;
-        color: #666;
-        line-height: 1.5;
     }
 }

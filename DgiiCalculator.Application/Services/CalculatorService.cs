@@ -47,7 +47,7 @@ namespace DgiiCalculator.Application.Services
             if (monthlyBase <= Escala1)
             {
                 monthlyTax = 0;
-                rateDescription = "Exento (Ingreso por debajo de RD$ 34,685.00)";
+                rateDescription = "Exento";
             }
             else if (monthlyBase <= Escala2)
             {
