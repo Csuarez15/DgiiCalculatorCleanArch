@@ -67,17 +67,47 @@
 
         <div class="accordion-wrapper">
             <div class="acc-item" id="acc-info">
+
                 <div class="acc-header" onclick="toggleAccordion('acc-info')">
                     <span>Información Adicional</span>
                     <i class="fas fa-caret-down acc-icon"></i>
                 </div>
+
                 <div class="acc-content">
-                    <p><strong>Instrucciones:</strong></p>
-                    <ul>
-                        <li>Seleccione la <strong>Frecuencia del Ingreso</strong>.</li>
-                        <li>Introduzca el <strong>Ingreso Imponible</strong>.</li>
-                        <li>Haga clic en <strong>CALCULAR</strong>.</li>
-                    </ul>
+
+                    <div class="info-block">
+                        <h4 class="info-title">Instrucciones:</h4>
+                        <ul class="info-list">
+                            <li>Seleccione la <strong>Frecuencia del Ingreso</strong> (Mensual o Anual).</li>
+                            <li>Introduzca el <strong>Ingreso Imponible</strong> en el campo indicado.</li>
+                            <li>Haga clic en <strong>CALCULAR</strong>.</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-block">
+                        <h4 class="info-title">Escala Mensual (Proyección):</h4>
+                        <ul class="info-list">
+                            <li><strong>Rentas hasta RD$ 34,685.00:</strong> Exento.</li>
+                            <li><strong>Desde RD$ 34,685.01 hasta RD$ 52,027.42:</strong> 15% del excedente de RD$ 34,685.01.</li>
+                            <li><strong>Desde RD$ 52,027.43 hasta RD$ 72,260.25:</strong> RD$ 2,601.36 + 20% del excedente de RD$ 52,027.43.</li>
+                            <li><strong>Desde RD$ 72,260.26 en adelante:</strong> RD$ 6,648.00 + 25% del excedente de RD$ 72,260.26.</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-block">
+                        <h4 class="info-title">Escala Anual (Ley 345-21):</h4>
+                        <ul class="info-list">
+                            <li><strong>Rentas hasta RD$ 416,220.00:</strong> Exento.</li>
+                            <li><strong>Desde RD$ 416,220.01 hasta RD$ 624,329.00:</strong> 15% del excedente de RD$ 416,220.01.</li>
+                            <li><strong>Desde RD$ 624,329.01 hasta RD$ 867,123.00:</strong> RD$ 31,216.00 + 20% del excedente de RD$ 624,329.01.</li>
+                            <li><strong>Desde RD$ 867,123.01 en adelante:</strong> RD$ 79,776.00 + 25% del excedente de RD$ 867,123.01.</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-note">
+                        <p><strong>Nota:</strong> Los tramos de la Escala Impositiva Anual son los establecidos en la Ley 345-21. La escala mensual se obtiene dividiendo los tramos anuales entre 12.</p>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -101,8 +131,11 @@
                            type="number"
                            step="0.01"
                            autofocus
+                           data-val-number="Por favor, ingrese un número válido."
+                           data-val-required="El ingreso es obligatorio."
                            oninput="validateMoneyInput(this)"
                            onkeydown="checkEnter(event)"
+                           onblur="if(this.value === '.') { this.value = ''; } else if(this.value.startsWith('.')) { this.value = '0' + this.value; }"
                            onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46" />
                     <span asp-validation-for="Input.IncomeAmount" class="text-danger"></span>
                 </div>
