@@ -68,12 +68,10 @@ namespace DgiiCalculator.Application.Services
             //Dividimos entre 12 para saber la cuota mensual bruta
             decimal rawMonthlyTax = rawAnnualTax / 12;
 
-            //REDONDEAMOS la cuota mensual a 2 decimales AHORA.
-            // Esto es crucial. En la vida real, la nómina te descuenta centavos exactos.
+            //REDONDEAMOS la cuota mensual a 2 decimales
             decimal finalMonthlyTax = Math.Round(rawMonthlyTax, 2, MidpointRounding.AwayFromZero);
 
             //Recalculamos el Anual "Proyectado" basado en lo que realmente se va a retener.
-            // Esto garantiza que la columna Anual sea siempre exactamente 12 veces la Mensual.
             decimal finalAnnualTax = finalMonthlyTax * 12;
 
             //CÁLCULO DE SUELDOS NETOS

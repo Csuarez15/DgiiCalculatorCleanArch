@@ -125,23 +125,26 @@
 
                 <div class="dgii-col">
                     <label>Ingreso Imponible (RD$)</label>
+
                     <input asp-for="Input.IncomeAmount"
+                           id="input-monto"
                            class="dgii-input"
                            placeholder="Ej: 60000.00"
-                           type="number"
-                           step="0.01"
-                           autofocus
-                           data-val-number="Por favor, ingrese un número válido."
-                           data-val-required="El ingreso es obligatorio."
-                           oninput="validateMoneyInput(this)"
-                           onkeydown="checkEnter(event)"
-                           onblur="if(this.value === '.') { this.value = ''; } else if(this.value.startsWith('.')) { this.value = '0' + this.value; }"
-                           onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 46" />
+                           type="text"
+                           inputmode="decimal"
+                           autocomplete="off"
+                           data-val="false"
+                           onkeydown="validateKeyPress(event)"
+                           oninput="formatAndValidate(this)"
+                           onblur="finalizeInput(this)" />
+
                     <span asp-validation-for="Input.IncomeAmount" class="text-danger"></span>
+
+                    <span id="js-error-message"></span>
                 </div>
             </div>
 
-            <button type="submit" class="btn-dgii-action">CALCULAR</button>
+            <button type="button" class="btn-dgii-action" onclick="validateAndSubmit()">CALCULAR</button>
             <div style="clear:both"></div>
         </form>
 

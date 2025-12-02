@@ -457,4 +457,87 @@ select.dgii-input {
     .nav-menu {
         display: none;
     }
+
+    /* --- TOOLTIP PERSONALIZADO DE ERROR --- */
+    .dgii-tooltip {
+        display: none;
+        position: absolute;
+        bottom: 50px;
+        left: 0;
+        background-color: #dc3545;
+        color: white;
+        padding: 8px 12px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 600;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        z-index: 100;
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+        white-space: nowrap;
+    }
+
+        .dgii-tooltip::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 20px;
+            border-width: 6px;
+            border-style: solid;
+            border-color: #dc3545 transparent transparent transparent;
+        }
+
+
+        .dgii-tooltip.visible {
+            display: block;
+            opacity: 1;
+        }
+    /* --- ANIMACIONES Y ERRORES --- */
+
+    @keyframes shake {
+        0% {
+            transform: translateX(0);
+        }
+
+        25% {
+            transform: translateX(-5px);
+        }
+
+        50% {
+            transform: translateX(5px);
+        }
+
+        75% {
+            transform: translateX(-5px);
+        }
+
+        100% {
+            transform: translateX(0);
+        }
+    }
+
+    .input-error-shake {
+        animation: shake 0.3s ease-in-out; 
+        border-color: #dc3545 !important; 
+        background-color: #fff8f8 !important;
+        box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.25) !important; 
+    }
+}
+    #js-error-message {
+        color: #dc3545;
+        font-size: 11px;
+        font-weight: 600;
+        position: absolute;
+        bottom: -18px;
+        left: 0;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+        white-space: nowrap;
+    }
+
+        #js-error-message.visible {
+            opacity: 1; 
+        }
+
+
 }
