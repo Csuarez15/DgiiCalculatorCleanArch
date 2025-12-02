@@ -1,7 +1,10 @@
+using DgiiCalculator.Application.Common;
 using DgiiCalculator.Application.Interfaces;
 using DgiiCalculator.Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.Configure<IsrSettings>(builder.Configuration.GetSection("IsrSettings"));
 
 builder.Services.AddScoped<ICalculatorService, CalculatorService>();
 

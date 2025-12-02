@@ -2,92 +2,93 @@
 using DgiiCalculator.Application.DTOs;
 using DgiiCalculator.Application.Interfaces;
 using DgiiCalculator.Domain.Entities;
+using Microsoft.Extensions.Options; // Necesario para IOptions
 
 namespace DgiiCalculator.Application.Services
 {
     public class CalculatorService : ICalculatorService
     {
-        // Escala Anual ISR Asalariados (Convertida a Mensual para cálculo base)
-        private const decimal Escala1 = 34685.00m;
-        private const decimal Escala2 = 52027.42m;
-        private const decimal Escala3 = 72260.25m;
+        private readonly IsrSettings _settings;
+
+        // Inyectamos la configuración desde appsettings.json
+        public CalculatorService(IOptions<IsrSettings> settings)
+        {
+            _settings = settings.Value;
+        }
 
         public ServiceResult<CalculationResult> CalculateIsr(CalculationInputDto input)
         {
-            
             decimal income = input.IncomeAmount ?? 0;
 
-            //VALIDACIÓN  DE LÓGICA
+            // 1. VALIDACIONES
             if (income <= 0)
             {
-                return ServiceResult<CalculationResult>.Fail("El ingreso debe ser mayor a 0. No se permiten valores negativos ni vacíos.");
+                return ServiceResult<CalculationResult>.Fail("El ingreso debe ser mayor a 0.");
             }
 
-            // Validar frecuencia correcta
-            if (input.Frequency != "M" && input.Frequency != "A")
-            {
-                return ServiceResult<CalculationResult>.Fail("La frecuencia seleccionada no es válida. Use 'Mensual' o 'Anual'.");
-            }
+            // 2. PROYECCIÓN ANUAL (Toda la lógica de DGII se basa en la escala anual)
+            decimal annualIncome;
 
-            //NORMALIZACIÓN A BASE MENSUAL
-            decimal monthlyBase = 0;
-            if (input.Frequency == "A")
+            if (input.Frequency == "M")
             {
-                monthlyBase = income / 12; 
+                // Si ingresó mensual, lo anualizamos multiplicando por 12
+                annualIncome = income * 12;
             }
             else
             {
-                monthlyBase = income;
+                // Si ingresó anual, se queda igual
+                annualIncome = income;
             }
 
-            //CÁLCULO DEL IMPUESTO (Lógica Core)
-            decimal monthlyTax = 0;
-            string rateDescription = "Exento (0%)";
+            // CÁLCULO DEL IMPUESTO ANUAL (Usando valores de configuración)
+            decimal annualTax = 0;
+            string rateDescription = "Exento";
 
-            if (monthlyBase <= Escala1)
+            if (annualIncome <= _settings.Scale1Limit)
             {
-                monthlyTax = 0;
-                rateDescription = "Exento";
+                annualTax = 0;
+                rateDescription = "Exento (Renta anual inferior al mínimo)";
             }
-            else if (monthlyBase <= Escala2)
+            else if (annualIncome <= _settings.Scale2Limit)
             {
-                // 15% del excedente de Escala1
-                monthlyTax = (monthlyBase - Escala1) * 0.15m;
+                // 15% del excedente de la Escala 1
+                annualTax = (annualIncome - _settings.Scale1Limit) * _settings.Rate1;
                 rateDescription = "15% del excedente";
             }
-            else if (monthlyBase <= Escala3)
+            else if (annualIncome <= _settings.Scale3Limit)
             {
-                // Fijo del tramo anterior + 20% del excedente
-                decimal fixedTax = 2601.36m;
-                monthlyTax = fixedTax + ((monthlyBase - Escala2) * 0.20m);
+                // Base fija + 20% del excedente de la Escala 2
+                annualTax = _settings.BaseTax2 + ((annualIncome - _settings.Scale2Limit) * _settings.Rate2);
                 rateDescription = "20% del excedente";
             }
             else
             {
-                // Fijo tramos anteriores + 25% del excedente
-                decimal fixedTax = 6648.00m;
-                monthlyTax = fixedTax + ((monthlyBase - Escala3) * 0.25m);
+                // Base fija + 25% del excedente de la Escala 3
+                annualTax = _settings.BaseTax3 + ((annualIncome - _settings.Scale3Limit) * _settings.Rate3);
                 rateDescription = "25% del excedente (Tasa Máxima)";
             }
 
-            // Redondear a 2 decimales
-            monthlyTax = Math.Round(monthlyTax, 2);
-            decimal monthlyNet = Math.Round(monthlyBase - monthlyTax, 2);
+            // CALCULAR VALORES MENSUALES (Dividiendo el anual entre 12)
+            // La DGII retiene mensualmente la doceava parte del impuesto anual estimado.
+            decimal monthlyTax = annualTax / 12;
 
-            //PROYECCIÓN ANUAL
-            decimal annualIncome = Math.Round(monthlyBase * 12, 2);
-            decimal annualTax = Math.Round(monthlyTax * 12, 2);
-            decimal annualNet = Math.Round(monthlyNet * 12, 2);
+            // Calculamos el ingreso mensual base para mostrar en la tabla
+            decimal monthlyIncomeBase = input.Frequency == "M" ? income : income / 12;
 
-            //CONSTRUIR RESULTADO
+            decimal monthlyNet = monthlyIncomeBase - monthlyTax;
+            decimal annualNet = annualIncome - annualTax;
+
             var result = new CalculationResult
             {
-                MonthlyIncome = Math.Round(monthlyBase, 2),
-                MonthlyTax = monthlyTax,
-                MonthlyNet = monthlyNet,
-                AnnualIncome = annualIncome,
-                AnnualTax = annualTax,
-                AnnualNet = annualNet,
+                // Redondeamos a 2 decimales para la visualización final
+                MonthlyIncome = Math.Round(monthlyIncomeBase, 2),
+                MonthlyTax = Math.Round(monthlyTax, 2),
+                MonthlyNet = Math.Round(monthlyNet, 2),
+
+                AnnualIncome = Math.Round(annualIncome, 2),
+                AnnualTax = Math.Round(annualTax, 2),
+                AnnualNet = Math.Round(annualNet, 2),
+
                 AppliedRate = rateDescription,
                 CalculationDate = DateTime.Now
             };
