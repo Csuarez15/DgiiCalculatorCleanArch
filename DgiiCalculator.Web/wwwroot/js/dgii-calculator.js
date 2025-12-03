@@ -45,31 +45,32 @@ function validateKeyPress(event) {
         (event.ctrlKey === true) || (event.metaKey === true)) {
 
         if (key === 'Enter') {
-            document.querySelector('.btn-dgii-action').click();
+            event.preventDefault(); 
+            validateAndSubmit(); 
         }
         return;
     }
 
-    // ERROR 1: Signo Negativo
+    //Signo Negativo
     if (key === '-' || key === 'Subtract') {
         event.preventDefault();
-        triggerError("⚠️ No se permiten ingresos negativos."); // Llama a la animación
+        triggerError("⚠️ No se permiten ingresos negativos."); 
         return;
     }
 
-    // ERROR 2: Letras o Símbolos
+    //Letras o Símbolos
     if (!/^[0-9.]$/.test(key)) {
         event.preventDefault();
-        triggerError("🚫 Solo se permiten números válidos."); // Llama a la animación
+        triggerError("🚫 Solo se permiten números válidos."); 
         return;
     }
 
-    // ERROR 3: Múltiples Puntos
+    //Múltiples Puntos
     if (key === '.') {
         const input = event.target;
         if (input.value.includes('.')) {
             event.preventDefault();
-            triggerError("ℹ️ Ya existe un punto decimal."); // Llama a la animación
+            triggerError("ℹ️ Ya existe un punto decimal.");
         }
     }
 }

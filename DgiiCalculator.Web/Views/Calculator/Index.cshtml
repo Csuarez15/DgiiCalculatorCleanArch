@@ -112,7 +112,7 @@
             </div>
         </div>
 
-        <form asp-controller="Calculator" asp-action="Index" method="post" class="dgii-form-section">
+        <form id="calculator-form" asp-controller="Calculator" asp-action="Index" method="post" class="dgii-form-section">
 
             <div class="dgii-row">
                 <div class="dgii-col">
@@ -144,7 +144,7 @@
                 </div>
             </div>
 
-            <button type="button" class="btn-dgii-action" onclick="validateAndSubmit()">CALCULAR</button>
+            <button type="button" class="btn-dgii-action" onclick="validateAndSubmit()" >CALCULAR</button>
             <div style="clear:both"></div>
         </form>
 
